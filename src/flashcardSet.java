@@ -1,15 +1,15 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class flashcardSet <V, P extends Comparable<P>> implements BinaryHeap<V, P>{
+public class flashcardSet {
 
-    private List<Prioritized<V,P>> _flashcardsHeap;
+    private List<Flashcard> _flashcardsHeap;
 
     public flashcardSet(){
         _flashcardsHeap = new ArrayList<>();
     }
 
-    public Prioritized<V, P>[] getAsArray(){ //Prints current flashcards in order of priority
+    public Flashcard[] getAsArray(){ //Prints current flashcards in order of priority
 
     };
 
@@ -17,7 +17,7 @@ public class flashcardSet <V, P extends Comparable<P>> implements BinaryHeap<V, 
         return _flashcardsHeap.size();
     }
 
-    public V getMax(){ //Finds next flashcard
+    public String getMax(){ //Finds next flashcard
         if (_flashcardsHeap.isEmpty()){
             return null;
         }else{
@@ -25,26 +25,30 @@ public class flashcardSet <V, P extends Comparable<P>> implements BinaryHeap<V, 
         }
     };
 
-    public void enqueue(V value, P priority){ //makes new flashcard
-        Flashcard<V,P> newFlashcard = new Flashcard(value, priority);
+    public void enqueue(String value, int priority){ //makes new flashcard
+        Flashcard newFlashcard = new Flashcard(value, priority);
         _flashcardsHeap.add(newFlashcard);
         int i = _flashcardsHeap.size() -1; //Set index to last flashcard in heap
-        while (i>0 && ((Comparable) _flashcardsHeap.get(i).getPriority()).compareTo(_flashcardsHeap.get((i-1)/2).getPriority())>0){ //While the current is larger than its parent
-            Prioritized<V,P> temp = _flashcardsHeap.get(i);
+        while (i>0 && (_flashcardsHeap.get(i).getPriority()) > (_flashcardsHeap.get((i-1)/2).getPriority())){ //While the current is larger than its parent
+            Flashcard temp = _flashcardsHeap.get(i);
             _flashcardsHeap.set(i,_flashcardsHeap.get((i-1)/2)); //Set current to parent
             _flashcardsHeap.set(((i-1)/2), temp); //Set former parent to current
             i = (i-1)/2; //Switch index to current's new spot
         }
     }
 
-    public V dequeue(int confidence){ //Instead of removing from the heap we adjust priority and put it back into the heap
+    public String dequeue(int confidence){ //Instead of removing from the heap we adjust priority and put it back into the heap
         if (_flashcardsHeap.isEmpty()){
             return null;
         }
-        Flashcard<V,P> currentFlashcard = (Flashcard)_flashcardsHeap.get(0);
+
+        Flashcard currentFlashcard = _flashcardsHeap.getFirst();
+
         if (confidence == 0){
-            (_flashcardsHeap.get(0)).setPriority(5);
+            (currentFlashcard).setPriority(100);
+            enqueue(currentFlashcard.getValue(), currentFlashcard.getPriority());
         }
+        return "hi";
     }
 
     public void adjustFlashcardPriority(int confidence, Flashcard currentFlashcard){
